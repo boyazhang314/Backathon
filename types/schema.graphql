@@ -1,0 +1,53 @@
+type Hacker { 
+    id: Int!
+    name: String!
+    email: String!
+    phone: String!
+    company: String!
+    skills: [Skill]
+}
+
+input HackerInput {
+    name: String
+    email: String
+    phone: String
+    company: String
+    skills: [SkillInput]
+}
+
+type UpdateHackerMutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    hacker: Hacker
+}
+
+type Skill {
+    id: Int!
+    skill: String!
+    rating: Int!
+    hackerId: Int!
+    hacker: Hacker
+}
+
+input SkillInput {
+    skill: String
+    rating: Int
+    hackerId: Int
+}
+
+type SkillAggregate {
+    skill: String
+    count: Int
+    hakers: [Hacker]
+}
+
+type Query {
+    hackers: [Hacker]
+    hacker(id: Int!): Hacker
+    skills(min: Int, max: Int): [SkillAggregate]
+}
+
+type Mutation {
+    updateHacker(id: Int!, data: HackerInput!): UpdateHackerMutationResponse
+}

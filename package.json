@@ -1,0 +1,35 @@
+{
+  "name": "htn-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "dependencies": {
+    "@apollo/server": "^4.4.0",
+    "graphql": "^16.6.0",
+    "sqlite3": "^5.1.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "codegen": "graphql-codegen --config codegen.ts",
+    "database": "del hackers.db && npx ts-node ./server/database.ts",
+    "start": "npm run codegen && npx ts-node ./server/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boyazhang314/HTN-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/boyazhang314/HTN-Backend/issues"
+  },
+  "homepage": "https://github.com/boyazhang314/HTN-Backend#readme",
+  "devDependencies": {
+    "@types/node": "^18.14.0",
+    "@graphql-codegen/cli": "3.0.0",
+    "@graphql-codegen/typescript": "3.0.0",
+    "@graphql-codegen/typescript-resolvers": "3.0.0"
+  }
+}
