@@ -12,7 +12,7 @@ interface Context {}
 
 const typeDefs = readFileSync('./types/schema.graphql', { encoding: 'utf-8' });
 
-const apolloServer = new ApolloServer<Context>({ typeDefs, resolvers });
+export const apolloServer = new ApolloServer<Context>({ typeDefs, resolvers });
 
 startStandaloneServer(apolloServer, {
   listen: { port: 4000 },

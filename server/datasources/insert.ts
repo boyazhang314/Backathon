@@ -4,11 +4,13 @@ import {
     Hacker,
     Skill,
     SkillInput,
+    Event
 } from '../../types/graphql';
 
 import {
     INSERT_HACKER,
-    INSERT_SKILL
+    INSERT_SKILL,
+    INSERT_EVENT,
 } from '../constants/sql';
 
 export const insertHacker = async (hacker: Hacker) => {
@@ -68,5 +70,22 @@ export const insertSkills = async (hackerId: number, skills: Skill[]) => {
 
     await Promise.all(promises).catch((err) => {
         console.error(err);
+    });
+};
+
+export const insertEvent = async (event: Event) => {
+    const db = new sqlite3.Database('hackers.db');
+    return new Promise<Event>((resolve, reject) => {
+        db.serialize(() => {
+            db.get(
+                INSERT_EVENT,
+                [event.event],
+                (err: Error, row: any) => {
+                    if (err) return reject(err);
+                    db.close();
+                    return resolve(row);
+                }
+            );
+        });
     });
 };

@@ -1,0 +1,15 @@
+[
+    {
+        "id": 0,
+        "name": "Hacker Man",
+        "company": "Hacking is Fun Inc.",
+        "email": "hacker@hotmail.com",
+        "phone": "999-999-9999",
+        "skills": [
+            {
+                "skill": "Hacking",
+                "rating": 5
+            }
+        ]
+    }
+]

@@ -1,11 +1,11 @@
-  /////////////////////////////
- // DATABASE INITIALIZATION //
+/////////////////////////////
+// DATABASE INITIALIZATION //
 /////////////////////////////
 
 import sqlite3 from 'sqlite3';
 
-import { createHackers, createSkills } from './datasources/create';
-import { insertHacker, insertSkills } from './datasources/insert';
+import { createHackers, createSkills, createEvents, createHackersEvents } from './datasources/create';
+import { insertHacker, insertSkills, insertEvent } from './datasources/insert';
 
 const database = new sqlite3.Database('hackers.db', (err) => {
     if (err) {
@@ -22,12 +22,19 @@ database.close((err) => {
 });
 
 // CREATE tables
-const createDB = () => {
+export const createDB = () => {
     return new Promise<string>((resolve, reject) => {
         createHackers().then(() => {
             createSkills().then(() => {
-                console.log('Created tables');
-                resolve('Created tables');
+                createEvents().then(() => {
+                    createHackersEvents().then(() => {
+                        resolve('Created tables');
+                    }).catch((err) => {
+                        return reject(err);
+                    })
+                }).catch((err) => {
+                    return reject(err);
+                })
             }).catch((err) => {
                 return reject(err);
             })
@@ -46,6 +53,13 @@ const initDB = () => {
             console.log('Inserted hacker #' + hackerId);
 
             await insertSkills(hackerId, hacker.skills).catch((err) => {
+                return reject(err);
+            });
+        }
+
+        const events = require('./constants/events.json');
+        for (let event of events) {
+            await insertEvent(event).catch((err) => {
                 return reject(err);
             });
         }

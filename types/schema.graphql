@@ -4,7 +4,9 @@ type Hacker {
     email: String!
     phone: String!
     company: String!
+    registered: Boolean!
     skills: [Skill]
+    attended: [Event]
 }
 
 input HackerInput {
@@ -12,6 +14,7 @@ input HackerInput {
     email: String
     phone: String
     company: String
+    registered: Boolean
     skills: [SkillInput]
 }
 
@@ -20,6 +23,12 @@ type UpdateHackerMutationResponse {
     success: Boolean!
     message: String!
     hacker: Hacker
+}
+
+type InsertHackersEventsMutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
 }
 
 type Skill {
@@ -39,15 +48,25 @@ input SkillInput {
 type SkillAggregate {
     skill: String
     count: Int
-    hakers: [Hacker]
+    hackers: [Hacker]
+}
+
+type Event {
+    id: Int!
+    event: String!
+    attendees: [Hacker]
 }
 
 type Query {
-    hackers: [Hacker]
+    hackers(skill: String, rating: Int): [Hacker]
     hacker(id: Int!): Hacker
     skills(min: Int, max: Int): [SkillAggregate]
+    skill(id: Int!): SkillAggregate
+    events: [Event]
 }
 
 type Mutation {
     updateHacker(id: Int!, data: HackerInput!): UpdateHackerMutationResponse
+    registerHacker(id: Int!): UpdateHackerMutationResponse
+    eventAttended(hackerId: Int!, eventId: Int!): InsertHackersEventsMutationResponse
 }

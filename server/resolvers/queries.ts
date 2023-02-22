@@ -1,8 +1,8 @@
 import { QueryResolvers } from '../../types/graphql';
-import { getAllHackers, getHacker, getSkills } from '../datasources/get';
+import { getAllHackers, getHacker, getSkills, getSkill, getEvents } from '../datasources/get';
 
 const queries: QueryResolvers = {
-    hackers: () => getAllHackers().then((hackers) => {
+    hackers: (_, { skill, rating }) => getAllHackers(skill, rating).then((hackers) => {
         return hackers;
     }),
     
@@ -12,6 +12,14 @@ const queries: QueryResolvers = {
 
     skills: (_, { min, max }) => getSkills(min, max).then((skills) => {
         return skills;
+    }),
+
+    skill: (_, { id }) => getSkill(id).then((skill) => {
+        return skill;
+    }),
+
+    events: () => getEvents().then((events) => {
+        return events;
     })
 }
 

@@ -6,12 +6,15 @@ import {
     Hacker,
     SkillInput,
     HackerInput,
-    UpdateHackerMutationResponse
+    UpdateHackerMutationResponse,
+    InsertHackersEventsMutationResponse
 } from '../../types/graphql';
 
 import {
     UPDATE_HACKER,
-    UPDATE_SKILL
+    UPDATE_SKILL,
+    REGISTER_HACKER,
+    INSERT_ATTENDEE,
 } from '../constants/sql';
 
 import { getHackerSkills } from './get';
@@ -29,6 +32,7 @@ export const updateHacker = (
                 data.email,
                 data.phone,
                 data.company,
+                data.registered,
                 id
             ],
             async (err, rows) => {
@@ -42,7 +46,7 @@ export const updateHacker = (
                     success: false,
                     message: 'No hacker found'
                 });
-                
+
                 if (data.skills)
                     for (let skill of data.skills) {
                         if (skill) await updateSkill(id, skill).catch((err) => {
@@ -57,6 +61,7 @@ export const updateHacker = (
                     email: rows[0].email,
                     phone: rows[0].phone,
                     company: rows[0].company,
+                    registered: rows[0].registered,
                     skills: skills
                 };
 
@@ -103,6 +108,71 @@ export const updateSkill = (
                         hackerId: rows[0].hackerId
                     })
                 }
+            }
+        )
+    })
+}
+
+export const registerHacker = (id: number) => {
+    const db = new sqlite3.Database('hackers.db');
+    return new Promise<UpdateHackerMutationResponse>((resolve, reject) => {
+        db.all(
+            REGISTER_HACKER,
+            [id],
+            async (err, rows) => {
+                if (err) return reject({
+                    code: '500',
+                    success: false,
+                    message: err.message
+                });
+                if (rows.length !== 1) return reject({
+                    code: '500',
+                    success: false,
+                    message: 'No hacker found'
+                });
+
+                const skills = await getHackerSkills(id);
+                let hacker: Hacker = {
+                    id: rows[0].id,
+                    name: rows[0].name,
+                    email: rows[0].email,
+                    phone: rows[0].phone,
+                    company: rows[0].company,
+                    registered: rows[0].registered,
+                    skills: skills
+                };
+
+                db.close();
+                return resolve({
+                    code: '200',
+                    success: true,
+                    message: 'Successfully registered user',
+                    hacker: hacker
+                });
+            }
+        )
+    })
+}
+
+export const eventAttended = (hackerId: number, eventId: number) => {
+    const db = new sqlite3.Database('hackers.db');
+    return new Promise<InsertHackersEventsMutationResponse>((resolve, reject) => {
+        db.all(
+            INSERT_ATTENDEE,
+            [hackerId, eventId],
+            async (err) => {
+                if (err) return reject({
+                    code: '500',
+                    success: false,
+                    message: err.message
+                });
+
+                db.close();
+                return resolve({
+                    code: '200',
+                    success: true,
+                    message: 'Successfully added attendee',
+                });
             }
         )
     })

@@ -15,5 +15,8 @@
     "files": true,
     "esm": true,
     "experimentalSpecifierResolution": "node"
-  }
+  },
+  "exclude": [
+    "./test.config.js"
+  ]
 }

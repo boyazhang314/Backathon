@@ -4,5 +4,5 @@ WORKDIR /src/api
 COPY *.json /src/api
 RUN npm install
 COPY . /src/api
-EXPOSE 3000
-CMD [ "npm", "init" ]
+EXPOSE 4000
+CMD [ "npm", "start" ]

@@ -14,13 +14,22 @@ export type Scalars = {
   Float: number;
 };
 
+export type Event = {
+  __typename?: 'Event';
+  attendees?: Maybe<Array<Maybe<Hacker>>>;
+  event: Scalars['String'];
+  id: Scalars['Int'];
+};
+
 export type Hacker = {
   __typename?: 'Hacker';
+  attended?: Maybe<Array<Maybe<Event>>>;
   company: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
   phone: Scalars['String'];
+  registered: Scalars['Boolean'];
   skills?: Maybe<Array<Maybe<Skill>>>;
 };
 
@@ -29,12 +38,33 @@ export type HackerInput = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   phone?: InputMaybe<Scalars['String']>;
+  registered?: InputMaybe<Scalars['Boolean']>;
   skills?: InputMaybe<Array<InputMaybe<SkillInput>>>;
+};
+
+export type InsertHackersEventsMutationResponse = {
+  __typename?: 'InsertHackersEventsMutationResponse';
+  code: Scalars['String'];
+  message: Scalars['String'];
+  success: Scalars['Boolean'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  eventAttended?: Maybe<InsertHackersEventsMutationResponse>;
+  registerHacker?: Maybe<UpdateHackerMutationResponse>;
   updateHacker?: Maybe<UpdateHackerMutationResponse>;
+};
+
+
+export type MutationEventAttendedArgs = {
+  eventId: Scalars['Int'];
+  hackerId: Scalars['Int'];
+};
+
+
+export type MutationRegisterHackerArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -45,13 +75,26 @@ export type MutationUpdateHackerArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  events?: Maybe<Array<Maybe<Event>>>;
   hacker?: Maybe<Hacker>;
   hackers?: Maybe<Array<Maybe<Hacker>>>;
+  skill?: Maybe<SkillAggregate>;
   skills?: Maybe<Array<Maybe<SkillAggregate>>>;
 };
 
 
 export type QueryHackerArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryHackersArgs = {
+  rating?: InputMaybe<Scalars['Int']>;
+  skill?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QuerySkillArgs = {
   id: Scalars['Int'];
 };
 
@@ -73,7 +116,7 @@ export type Skill = {
 export type SkillAggregate = {
   __typename?: 'SkillAggregate';
   count?: Maybe<Scalars['Int']>;
-  hakers?: Maybe<Array<Maybe<Hacker>>>;
+  hackers?: Maybe<Array<Maybe<Hacker>>>;
   skill?: Maybe<Scalars['String']>;
 };
 
@@ -161,8 +204,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Event: ResolverTypeWrapper<Event>;
   Hacker: ResolverTypeWrapper<Hacker>;
   HackerInput: HackerInput;
+  InsertHackersEventsMutationResponse: ResolverTypeWrapper<InsertHackersEventsMutationResponse>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -176,8 +221,10 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Event: Event;
   Hacker: Hacker;
   HackerInput: HackerInput;
+  InsertHackersEventsMutationResponse: InsertHackersEventsMutationResponse;
   Int: Scalars['Int'];
   Mutation: {};
   Query: {};
@@ -188,23 +235,43 @@ export type ResolversParentTypes = {
   UpdateHackerMutationResponse: UpdateHackerMutationResponse;
 };
 
+export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
+  attendees?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hacker']>>>, ParentType, ContextType>;
+  event?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type HackerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Hacker'] = ResolversParentTypes['Hacker']> = {
+  attended?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
   company?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   phone?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  registered?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   skills?: Resolver<Maybe<Array<Maybe<ResolversTypes['Skill']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type InsertHackersEventsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['InsertHackersEventsMutationResponse'] = ResolversParentTypes['InsertHackersEventsMutationResponse']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  eventAttended?: Resolver<Maybe<ResolversTypes['InsertHackersEventsMutationResponse']>, ParentType, ContextType, RequireFields<MutationEventAttendedArgs, 'eventId' | 'hackerId'>>;
+  registerHacker?: Resolver<Maybe<ResolversTypes['UpdateHackerMutationResponse']>, ParentType, ContextType, RequireFields<MutationRegisterHackerArgs, 'id'>>;
   updateHacker?: Resolver<Maybe<ResolversTypes['UpdateHackerMutationResponse']>, ParentType, ContextType, RequireFields<MutationUpdateHackerArgs, 'data' | 'id'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
   hacker?: Resolver<Maybe<ResolversTypes['Hacker']>, ParentType, ContextType, RequireFields<QueryHackerArgs, 'id'>>;
-  hackers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hacker']>>>, ParentType, ContextType>;
+  hackers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hacker']>>>, ParentType, ContextType, Partial<QueryHackersArgs>>;
+  skill?: Resolver<Maybe<ResolversTypes['SkillAggregate']>, ParentType, ContextType, RequireFields<QuerySkillArgs, 'id'>>;
   skills?: Resolver<Maybe<Array<Maybe<ResolversTypes['SkillAggregate']>>>, ParentType, ContextType, Partial<QuerySkillsArgs>>;
 };
 
@@ -219,7 +286,7 @@ export type SkillResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type SkillAggregateResolvers<ContextType = any, ParentType extends ResolversParentTypes['SkillAggregate'] = ResolversParentTypes['SkillAggregate']> = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  hakers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hacker']>>>, ParentType, ContextType>;
+  hackers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hacker']>>>, ParentType, ContextType>;
   skill?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -233,7 +300,9 @@ export type UpdateHackerMutationResponseResolvers<ContextType = any, ParentType 
 };
 
 export type Resolvers<ContextType = any> = {
+  Event?: EventResolvers<ContextType>;
   Hacker?: HackerResolvers<ContextType>;
+  InsertHackersEventsMutationResponse?: InsertHackersEventsMutationResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Skill?: SkillResolvers<ContextType>;
