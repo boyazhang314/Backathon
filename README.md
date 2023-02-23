@@ -13,8 +13,6 @@ Currently all the data is stored in one measly JSON file, so let's fix that - Ba
 
 Apollo Server provides a nice UI to explore and test queries or mutations, read documentation, and view the schema
 
-![apolloserver](public\apolloserver.png)
-
 ### Overview
 
 ```
