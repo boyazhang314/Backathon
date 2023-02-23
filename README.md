@@ -274,6 +274,7 @@ mutation {
 And `registered` is now true for Hackerman.
 
 **eventAttended**
+
 Lastly, we also want to record when hackers attend events or activities. This can be done by adding an entry with the hacker's ID and the event's ID.
 ```
 mutation {

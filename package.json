@@ -14,7 +14,7 @@
   },
   "scripts": {
     "gen": "graphql-codegen --config codegen.ts",
-    "db": "del hackers.db && npx ts-node ./server/database.ts",
+    "db": "rm hackers.db && npx ts-node ./server/database.ts",
     "dev": "npx ts-node ./server/index.ts",
     "test": "jest --watchAll",
     "start": "npm run db && npx ts-node ./server/index.ts"
