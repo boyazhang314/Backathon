@@ -1,5 +1,5 @@
-/////////////////////////////
-// DATABASE INITIALIZATION //
+  /////////////////////////////
+ // DATABASE INITIALIZATION //
 /////////////////////////////
 
 import sqlite3 from 'sqlite3';
@@ -21,7 +21,7 @@ database.close((err) => {
     console.log("Closed the SQLite database");
 });
 
-// CREATE tables
+// Create tables
 export const createDB = () => {
     return new Promise<string>((resolve, reject) => {
         createHackers().then(() => {
@@ -44,7 +44,7 @@ export const createDB = () => {
     })
 }
 
-// INSERT data
+// Insert data
 const initDB = () => {
     return new Promise<string>(async (resolve, reject) => {
         const hackers = require('./constants/data.json');

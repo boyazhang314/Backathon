@@ -6,8 +6,7 @@ import {
     Hacker,
     SkillInput,
     HackerInput,
-    UpdateHackerMutationResponse,
-    InsertHackersEventsMutationResponse
+    MutationResponse
 } from '../../types/graphql';
 
 import {
@@ -24,7 +23,7 @@ export const updateHacker = (
     data: HackerInput
 ) => {
     const db = new sqlite3.Database('hackers.db');
-    return new Promise<UpdateHackerMutationResponse>((resolve, reject) => {
+    return new Promise<MutationResponse>((resolve, reject) => {
         db.all(
             UPDATE_HACKER,
             [
@@ -115,7 +114,7 @@ export const updateSkill = (
 
 export const registerHacker = (id: number) => {
     const db = new sqlite3.Database('hackers.db');
-    return new Promise<UpdateHackerMutationResponse>((resolve, reject) => {
+    return new Promise<MutationResponse>((resolve, reject) => {
         db.all(
             REGISTER_HACKER,
             [id],
@@ -156,7 +155,7 @@ export const registerHacker = (id: number) => {
 
 export const eventAttended = (hackerId: number, eventId: number) => {
     const db = new sqlite3.Database('hackers.db');
-    return new Promise<InsertHackersEventsMutationResponse>((resolve, reject) => {
+    return new Promise<MutationResponse>((resolve, reject) => {
         db.all(
             INSERT_ATTENDEE,
             [hackerId, eventId],

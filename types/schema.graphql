@@ -1,72 +1,213 @@
-type Hacker { 
-    id: Int!
-    name: String!
-    email: String!
-    phone: String!
-    company: String!
-    registered: Boolean!
-    skills: [Skill]
-    attended: [Event]
+"""
+Hacker represents a participant in the Hackathon
+"""
+type Hacker {
+  """
+  ID is a unique identifier for each hacker which automatically increments
+  """
+  id: Int!
+  """
+  Name of the Hacker
+  """
+  name: String!
+  """
+  Email of the Hacker
+  """
+  email: String!
+  """
+  Phone number of the Hacker
+  """
+  phone: String!
+  """
+  Company of the Hacker
+  """
+  company: String!
+  """
+  Registered represents if the Hacker was successfully registered for the Hackathon
+  """
+  registered: Boolean!
+  """
+  Skills are all skills the Hacker has
+  """
+  skills: [Skill]
+  """
+  Attended are all Events that the Hacker has gone to
+  """
+  attended: [Event]
 }
 
+"""
+HackerInput represents data of a Hacker for a Mutation
+"""
 input HackerInput {
-    name: String
-    email: String
-    phone: String
-    company: String
-    registered: Boolean
-    skills: [SkillInput]
+  """
+  Name of the Hacker
+  """
+  name: String
+  """
+  Email of the Hacker
+  """
+  email: String
+  """
+  Phone number of the Hacker
+  """
+  phone: String
+  """
+  Company of the Hacker
+  """
+  company: String
+  """
+  Registered represents if the Hacker was successfully registered for the Hackathon
+  """
+  registered: Boolean
+  """
+  Skills are all skills the Hacker has
+  """
+  skills: [SkillInput]
 }
 
-type UpdateHackerMutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    hacker: Hacker
+"""
+MutationResponse is the data returned after a Mutation
+"""
+type MutationResponse {
+  """
+  Code is the success code of the operation
+  """
+  code: String!
+  """
+  Success represents whether or not the mutation was successful
+  """
+  success: Boolean!
+  """
+  Message is the response message
+  """
+  message: String!
+  """
+  Hacker which was mutated
+  """
+  hacker: Hacker
 }
 
-type InsertHackersEventsMutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-}
-
+"""
+Skill represents an ability and its proficiency of a Hacker
+"""
 type Skill {
-    id: Int!
-    skill: String!
-    rating: Int!
-    hackerId: Int!
-    hacker: Hacker
+  """
+  ID is a unique identifier for each skill which automatically increments
+  """
+  id: Int!
+  """
+  Skill is the name of the actual skill
+  """
+  skill: String!
+  """
+  Rating is a numerical indication of the level of proficiency
+  """
+  rating: Int!
+  """
+  HackerID is the ID of the Hacker with this Skill
+  """
+  hackerId: Int!
+  """
+  Hacker is the one with this Skill
+  """
+  hacker: Hacker
 }
 
+"""
+SkillInput represents data of a Skill for a Mutation
+"""
 input SkillInput {
-    skill: String
-    rating: Int
-    hackerId: Int
+  """
+  Skill is the name of the actual skill
+  """
+  skill: String!
+  """
+  Rating is a numerical indication of the level of proficiency
+  """
+  rating: Int!
+  """
+  HackerID is the ID of the Hacker with this Skill
+  """
+  hackerId: Int
 }
 
+"""
+SkillAggregate provides an aggregate view of a skill
+"""
 type SkillAggregate {
-    skill: String
-    count: Int
-    hackers: [Hacker]
+  """
+  Skill is the name of the actual skill
+  """
+  skill: String
+  """
+  Count is the number of hackers with this skill
+  """
+  count: Int
+  """
+  Hackers are all hackers with this skill
+  """
+  hackers: [Hacker]
 }
 
+"""
+Event represents any workshop or activity that occurs during the Hackathon
+"""
 type Event {
-    id: Int!
-    event: String!
-    attendees: [Hacker]
+  """
+  ID is a unique identifier for each event which automatically increments
+  """
+  id: Int!
+  """
+  Event is the name of the event
+  """
+  event: String!
+  """
+  Attendees are all Hackers that have gone to the Event
+  """
+  attendees: [Hacker]
 }
 
+"""
+Query type for selecting and viewing data
+"""
 type Query {
-    hackers(skill: String, rating: Int): [Hacker]
-    hacker(id: Int!): Hacker
-    skills(min: Int, max: Int): [SkillAggregate]
-    skill(id: Int!): SkillAggregate
-    events: [Event]
+  """
+  Query all Hackers, can filter with a specified skill and a specified skill rating
+  """
+  hackers(skill: String, rating: Int): [Hacker]
+  """
+  Query a specific Hacker with their unique ID
+  """
+  hacker(id: Int!): Hacker
+  """
+  Query all Skills, can filter with a range for the frequency
+  """
+  skills(min: Int, max: Int): [SkillAggregate]
+  """
+  Query a specific Skill with its unique ID
+  """
+  skill(id: Int!): SkillAggregate
+  """
+  Query all events
+  """
+  events: [Event]
 }
 
+"""
+Mutation type for manipulating data
+"""
 type Mutation {
-    updateHacker(id: Int!, data: HackerInput!): UpdateHackerMutationResponse
-    registerHacker(id: Int!): UpdateHackerMutationResponse
-    eventAttended(hackerId: Int!, eventId: Int!): InsertHackersEventsMutationResponse
+  """
+  Update a Hacker with new data and possibly add skills
+  """
+  updateHacker(id: Int!, data: HackerInput!): MutationResponse
+  """
+  Update a Hacker by flagging them as registered
+  """
+  registerHacker(id: Int!): MutationResponse
+  """
+  Insert using IDs a log of a Hacker attending an Event
+  """
+  eventAttended(hackerId: Int!, eventId: Int!): MutationResponse
 }
